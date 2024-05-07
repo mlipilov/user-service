@@ -1,0 +1,17 @@
+spring:
+  kafka:
+    consumer:
+      isolation-level: read_committed
+      group-id: report-engine-consumer
+      bootstrap-servers: ${KAFKA_SERVER_URL::http://localhost:9092}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    security:
+      protocol: PLAINTEXT
+    admin:
+      ssl:
+        trust-store-type: NONE
+    topics:
+      user-csv-data-topic: user-csv-data
+    bootstrap-servers: ${KAFKA_SERVER_URL:http://localhost:9092}

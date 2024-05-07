@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_LOGIN:local_user}
+    password: ${DB_PASS:local_pass}
+    url: ${DB_URL:jdbc:postgresql://localhost:6001/file_transfer_agent}
