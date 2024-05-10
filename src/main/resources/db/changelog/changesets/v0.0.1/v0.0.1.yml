@@ -1,0 +1,87 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0.0.1-1 create users
+      author: m.lipilov@andersenlab.com
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: varchar
+              - column:
+                  name: first_name
+                  type: varchar
+              - column:
+                  name: last_name
+                  type: varchar
+              - column:
+                  name: age
+                  type: int
+              - column:
+                  name: street
+                  type: varchar
+              - column:
+                  name: city
+                  type: varchar
+              - column:
+                  name: state
+                  type: varchar
+              - column:
+                  name: zip
+                  type: varchar
+              - column:
+                  name: phone_number
+                  type: varchar
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    unique: true
+        - createTable:
+            tableName: workspaces
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    unique: true
+              - column:
+                  name: creation_date
+                  type: date
+              - column:
+                  name: description
+                  type: varchar
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    references: users(id)
+                    foreignKeyName: workspaces_users_fk
+        - createTable:
+            tableName: user_write_errors
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: stack_trace
+                  type: text
+              - column:
+                  name: message
+                  type: varchar

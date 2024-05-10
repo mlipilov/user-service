@@ -3,4 +3,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DB_LOGIN:local_user}
     password: ${DB_PASS:local_pass}
-    url: ${DB_URL:jdbc:postgresql://localhost:6001/file_transfer_agent}
+    url: ${DB_URL:jdbc:postgresql://localhost:6001/users}
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy

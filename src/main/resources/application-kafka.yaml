@@ -1,12 +1,26 @@
 spring:
   kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_SERVER_URL:http://localhost:9092}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      transaction-id-prefix: tx-${random.uuid}
     consumer:
       isolation-level: read_committed
-      group-id: report-engine-consumer
+      group-id: user-service-consumer
       bootstrap-servers: ${KAFKA_SERVER_URL::http://localhost:9092}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: "false"
+            value:
+              default:
+                type: "com.andersen.userservice.model.user.User"
     security:
       protocol: PLAINTEXT
     admin:
@@ -14,4 +28,5 @@ spring:
         trust-store-type: NONE
     topics:
       user-csv-data-topic: user-csv-data
+      user-csv-data-dlt-topic: user-csv-data-dlt
     bootstrap-servers: ${KAFKA_SERVER_URL:http://localhost:9092}
