@@ -20,6 +20,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is an implementation of the ItemProcessor interface used to process User objects and
+ * convert them into UserEntity objects. The UserItemProcessor class is responsible for mapping the
+ * properties of a User object to the properties of a UserEntity object. It also handles the logic
+ * of adding workspaces to the UserEntity object based on the provided User object.
+ */
 @Component
 @RequiredArgsConstructor
 public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
@@ -27,6 +33,12 @@ public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
   private final UserEntityRepository userEntityRepository;
   private final WorkspaceEntityRepository workspaceEntityRepository;
 
+  /**
+   * Processes a User item and returns a UserEntity.
+   *
+   * @param item The User item to be processed. Non-null.
+   * @return The UserEntity object generated from the item.
+   */
   @Override
   @Transactional
   public UserEntity process(final @NonNull User item) {
