@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserEntity {
 
   @Id
@@ -35,6 +37,7 @@ public class UserEntity {
   @Embedded
   private UserAddress userAddress;
   @Embedded
+  @EqualsAndHashCode.Include
   private UserContactDetails userContactDetails;
 
   @Setter(NONE)

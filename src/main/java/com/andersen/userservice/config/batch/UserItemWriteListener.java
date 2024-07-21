@@ -1,5 +1,7 @@
 package com.andersen.userservice.config.batch;
 
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
+
 import com.andersen.userservice.entity.user.UserEntity;
 import com.andersen.userservice.service.UserWriteErrorCollectorService;
 import lombok.NonNull;
@@ -31,7 +33,7 @@ public class UserItemWriteListener implements ItemWriteListener<UserEntity> {
    * @param items The chunk of UserEntity items being written.
    */
   @Override
-  @Transactional
+  @Transactional(transactionManager = "transactionManager", propagation = REQUIRES_NEW)
   public void onWriteError(
       final @NonNull Exception exception,
       final @NonNull Chunk<? extends UserEntity> items

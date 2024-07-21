@@ -1,12 +1,12 @@
 package com.andersen.userservice.config.batch;
 
-import static java.lang.System.currentTimeMillis;
 import static org.apache.commons.lang3.math.NumberUtils.INTEGER_ZERO;
 
 import com.andersen.userservice.entity.user.UserEntity;
 import com.andersen.userservice.model.user.User;
 import com.andersen.userservice.repository.UserEntityRepository;
 import java.util.Properties;
+import java.util.UUID;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -100,13 +100,13 @@ public class UserCsvDataTransferConfig {
       final JobRepository jobRepository,
       final KafkaItemReader<String, User> reader,
       final RepositoryItemWriter<UserEntity> writer,
-      final PlatformTransactionManager platformTransactionManager,
+      final PlatformTransactionManager transactionManager,
       final UserItemProcessor userItemProcessor,
       final UserItemWriteListener userItemWriteListener,
       final UseItemReadListener userItemReadListener
   ) {
     return new StepBuilder(USER_JOB_STEP_NAME, jobRepository)
-        .<User, UserEntity>chunk(CHUNK_SIZE, platformTransactionManager)
+        .<User, UserEntity>chunk(CHUNK_SIZE, transactionManager)
         .processor(userItemProcessor)
         .listener(userItemWriteListener)
         .listener(userItemReadListener)
@@ -129,7 +129,7 @@ public class UserCsvDataTransferConfig {
       final JobExecutionListener userJobListener,
       final Step userJobStep
   ) {
-    final String jobName = USER_JOB_NAME.concat(DELIMITER) + currentTimeMillis();
+    final String jobName = USER_JOB_NAME.concat(DELIMITER).concat(UUID.randomUUID().toString());
     return new JobBuilder(jobName, jobRepository)
         .listener(userJobListener)
         .start(userJobStep)

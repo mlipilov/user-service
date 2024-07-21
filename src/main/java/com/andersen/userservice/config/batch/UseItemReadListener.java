@@ -26,9 +26,14 @@ public class UseItemReadListener implements ItemReadListener<User> {
    * @param ex The exception that was thrown during the item reading process.
    */
   @Override
-  @Transactional
+  @Transactional(transactionManager = "transactionManager")
   public void onReadError(@NonNull final Exception ex) {
     log.error(ex.getMessage(), ex);
     userCsvDataDltProducer.produce(ex);
+  }
+
+  @Override
+  public void afterRead(User item) {
+    log.info("User is : {}", item.toString());
   }
 }

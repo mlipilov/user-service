@@ -11,14 +11,15 @@ import com.andersen.userservice.model.user.User;
 import com.andersen.userservice.model.workspace.Workspace;
 import com.andersen.userservice.repository.UserEntityRepository;
 import com.andersen.userservice.repository.WorkspaceEntityRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class is an implementation of the ItemProcessor interface used to process User objects and
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
  * properties of a User object to the properties of a UserEntity object. It also handles the logic
  * of adding workspaces to the UserEntity object based on the provided User object.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
@@ -40,9 +42,10 @@ public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
    * @return The UserEntity object generated from the item.
    */
   @Override
-  @Transactional
+  @Transactional(transactionManager = "transactionManager")
   public UserEntity process(final @NonNull User item) {
-    final UserEntity userEntity = new UserEntity();
+    log.info("User is : {}", item.toString());
+    UserEntity userEntity = new UserEntity();
 
     final Long userIdentifier = getUserIdentifier(item);
     if (Objects.isNull(userIdentifier)) {
@@ -53,7 +56,9 @@ public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
     } else {
       final var existingUser = userEntityRepository.findById(userIdentifier).orElseThrow();
       addWorkspaces(item, existingUser);
+      userEntity = existingUser;
     }
+
     return userEntity;
   }
 
