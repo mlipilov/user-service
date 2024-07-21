@@ -26,6 +26,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+/**
+ * Configuration class for transferring CSV user data from Kafka to a database.
+ */
 @Configuration
 public class UserCsvDataTransferConfig {
 
@@ -36,6 +39,13 @@ public class UserCsvDataTransferConfig {
   private static final String USER_KAFKA_ITEM_READER_NAME = "UserKafkaItemReaderName";
   public static final String DELIMITER = "_";
 
+  /**
+   * Creates a KafkaItemReader for reading User objects from a Kafka topic.
+   *
+   * @param topic           The name of the Kafka topic.
+   * @param kafkaProperties The KafkaProperties object containing the Kafka consumer properties.
+   * @return A KafkaItemReader instance for reading User objects from the specified topic.
+   */
   @Bean
   @StepScope
   public KafkaItemReader<String, User> userReader(
@@ -54,6 +64,12 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Returns a RepositoryItemWriter for writing UserEntity objects to a repository.
+   *
+   * @param userEntityRepository The repository where the UserEntity objects will be written.
+   * @return A RepositoryItemWriter instance for UserEntity objects.
+   */
   @Bean
   public RepositoryItemWriter<UserEntity> userWriter(
       final UserEntityRepository userEntityRepository
@@ -63,6 +79,22 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Returns a Step object for a user job.
+   *
+   * @param jobRepository              The JobRepository object used for managing job metadata and
+   *                                   status.
+   * @param reader                     The KafkaItemReader used for reading User objects from a
+   *                                   Kafka topic.
+   * @param writer                     The RepositoryItemWriter used for writing UserEntity objects
+   *                                   to a repository.
+   * @param platformTransactionManager The PlatformTransactionManager used for managing
+   *                                   transactions.
+   * @param userItemProcessor          The UserItemProcessor used for processing User objects.
+   * @param userItemWriteListener      The UserItemWriteListener used for handling write errors.
+   * @param userItemReadListener       The UserItemReadListener used for handling read errors.
+   * @return A Step object for a user job.
+   */
   @Bean
   public Step userJobStep(
       final JobRepository jobRepository,
@@ -83,6 +115,14 @@ public class UserCsvDataTransferConfig {
         .build();
   }
 
+  /**
+   * Creates a user job with the given parameters.
+   *
+   * @param jobRepository    The JobRepository used for managing job metadata and status.
+   * @param userJobListener  The JobExecutionListener used for monitoring job execution.
+   * @param userJobStep      The Step representing the user job step.
+   * @return The created Job object.
+   */
   @Bean
   public Job userJob(
       final JobRepository jobRepository,

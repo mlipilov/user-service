@@ -7,8 +7,10 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserWriteErrorCollectorServiceImpl implements UserWriteErrorCollectorService {
@@ -18,6 +20,7 @@ public class UserWriteErrorCollectorServiceImpl implements UserWriteErrorCollect
   @Override
   @Transactional
   public void collect(final Exception exception) {
+    log.warn("Started collecting error...");
     final UserWriteErrorEntity userWriteErrorEntity = new UserWriteErrorEntity();
     userWriteErrorEntity.setMessage(exception.getMessage());
     userWriteErrorEntity.setCreatedAt(LocalDateTime.now());

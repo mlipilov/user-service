@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'io.freefair.lombok' version '8.6'
+    id 'jacoco'
 }
 
 group = 'com.andersen'
@@ -10,6 +11,33 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            'com/andersen/userservice/utils/**',
+                            'com/andersen/userservice/entity/**',
+                            'com/andersen/userservice/repository/**',
+                            'com/andersen/userservice/producer/**',
+                            'com/andersen/userservice/scheduler/**',
+                            'com/andersen/userservice/config/**',
+                            'com/andersen/userservice/filter/**',
+                            'com/andersen/userservice/constants/**',
+                            'com/andersen/userservice/model/**',
+                            'com/andersen/userservice/UserServiceApplication.class'
+                    ])
+                })
+        )
+    }
 }
 
 jar {
