@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.item.Chunk;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * UserItemWriteListener is a class that implements the ItemWriteListener interface and acts as a
@@ -30,6 +31,7 @@ public class UserItemWriteListener implements ItemWriteListener<UserEntity> {
    * @param items The chunk of UserEntity items being written.
    */
   @Override
+  @Transactional
   public void onWriteError(
       final @NonNull Exception exception,
       final @NonNull Chunk<? extends UserEntity> items
