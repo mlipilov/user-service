@@ -74,16 +74,16 @@ public class UserItemProcessor implements ItemProcessor<User, UserEntity> {
 
     workspaces.forEach(workspace -> {
       final var workspaceEntityOpt = workspaceEntityRepository.findByName(workspace.getName());
+      final WorkspaceEntity workspaceEntity;
       if (workspaceEntityOpt.isPresent()) {
-        final WorkspaceEntity workspaceEntity = workspaceEntityOpt.get();
-        userEntity.addWorkspace(workspaceEntity);
+        workspaceEntity = workspaceEntityOpt.get();
       } else {
-        final WorkspaceEntity workspaceEntity = new WorkspaceEntity();
+        workspaceEntity = new WorkspaceEntity();
         workspaceEntity.setName(workspace.getName());
         workspaceEntity.setDescription(workspace.getDescription());
         workspaceEntity.setCreationDate(workspaceEntity.getCreationDate());
-        userEntity.addWorkspace(workspaceEntity);
       }
+      userEntity.addWorkspace(workspaceEntity);
     });
   }
 
